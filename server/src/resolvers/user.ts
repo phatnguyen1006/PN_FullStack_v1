@@ -11,7 +11,7 @@ export class UserResolver {
         @Arg("password") password: string
     ): Promise<User | null> {
         try {
-            const existingUser = await User.find({ where: { username } });
+            const existingUser = await User.findOne({ username });
             
             if (existingUser) return null;
 

@@ -1,32 +1,17 @@
 import "reflect-metadata";
 import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { apolloORM } from "./apolloORM";
-
-// Resolvers
-import { HelloResolver, UserResolver } from "./resolvers";
+import { apolloDB } from "./apolloDB";
+import { apolloServerConfiguration } from "./apolloServer";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
 const main = async () => {
-  await apolloORM.initialize();
+  await apolloDB();
 
   const app = express();
 
-  const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
-      validate: false,
-    }), // register resolvers
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-  });
-
-  await apolloServer.start(); // start server before do something
-
-  apolloServer.applyMiddleware({ app, cors: false }); // apply GraphQL/Apollo to stand before server
+  const apolloServer = await apolloServerConfiguration(app);
 
   app.listen(PORT, () =>
     console.log(
