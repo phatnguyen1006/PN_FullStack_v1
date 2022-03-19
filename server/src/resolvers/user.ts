@@ -1,7 +1,9 @@
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { User } from "../entities";
 // types
-import { UserMutationResponse } from "../types";
+import { UserMutationResponse, IRegisterInput } from "../types";
+// util
+import { validateRegisterInput } from "../utils";
 // helper function
 import { hashPassword } from "../helpers/crypt";
 
@@ -9,13 +11,17 @@ import { hashPassword } from "../helpers/crypt";
 export class UserResolver {
   @Mutation((_returns) => UserMutationResponse, { nullable: true })
   async register(
-    @Arg("email") email: string,
-    @Arg("username") username: string,
-    @Arg("password") password: string
+    @Arg("registerInput") registerInput: IRegisterInput
   ): Promise<UserMutationResponse> {
+    const validationRegisterInputErrors = validateRegisterInput(registerInput);
+
+    if (validationRegisterInputErrors !== null)
+      return { code: 400, success: false, ...validationRegisterInputErrors };
+
     try {
+      const { email, username, password } = registerInput;
       const existingUser = await User.findOne({
-        where: [{ username }, { email }]
+        where: [{ username }, { email }],
       });
 
       if (existingUser)
@@ -26,7 +32,9 @@ export class UserResolver {
           errors: [
             {
               field: existingUser.username === username ? "username" : "email",
-              message: `${ existingUser.username === username ? "Username" : "Email" } already taken`,
+              message: `${
+                existingUser.username === username ? "Username" : "Email"
+              } already taken`,
             },
           ],
         };
