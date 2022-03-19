@@ -1,6 +1,6 @@
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { User } from "../entities";
-import argon2 from "argon2";
+import { hashPassword } from "../helpers/crypt";
 
 @Resolver()
 export class UserResolver {
@@ -12,11 +12,10 @@ export class UserResolver {
     ): Promise<User | null> {
         try {
             const existingUser = await User.find({ where: { username } });
-            console.log(existingUser);
             
             if (existingUser) return null;
 
-            const hashedPassword = await argon2.hash(password);
+            const hashedPassword = await hashPassword(password);
 
             const newUser = User.create({
                 username,
