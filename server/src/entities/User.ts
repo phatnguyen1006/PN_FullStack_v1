@@ -2,10 +2,10 @@ import { Field, ID, ObjectType } from "type-graphql";
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 //- Decorator
-@ObjectType()
+@ObjectType()   // define type when return
 @Entity()   // create db table
 export class User extends BaseEntity {
-    @Field(_type => ID)
+    @Field(_type => ID)         // define it is a field will return
     @PrimaryGeneratedColumn()   // auto gen PRIMARY KEY
     id!: number                 //- id!: not null
 
