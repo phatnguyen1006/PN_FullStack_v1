@@ -3,7 +3,7 @@ import { User } from "../entities";
 // types
 import { UserMutationResponse, IRegisterInput } from "../types";
 // util
-import { validateRegisterInput } from "../utils";
+import { validateRegisterInput } from "../utils/validations";
 // helper function
 import { hashPassword } from "../helpers/crypt";
 
