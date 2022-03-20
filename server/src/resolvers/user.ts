@@ -1,11 +1,17 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { User } from "../entities";
 // types
-import { UserMutationResponse, IRegisterInput, ILoginInput, Context } from "../types";
+import {
+  UserMutationResponse,
+  IRegisterInput,
+  ILoginInput,
+  Context,
+} from "../types";
 // util
 import { validateRegisterInput } from "../utils/validations";
 // helper function
 import { hashPassword, comparePassword } from "../helpers/crypt";
+import { COOKIE_NAME } from "../constants";
 
 @Resolver()
 export class UserResolver {
@@ -76,46 +82,47 @@ export class UserResolver {
       );
 
       if (!existingUser)
-      return {
-        code: 400,
-        success: false,
-        message: "User not found",
-        errors: [
-          {
-            field: "usernameOrEmail",
-            message: "Username or email incorrect"
-          }
-        ]
-      };
+        return {
+          code: 400,
+          success: false,
+          message: "User not found",
+          errors: [
+            {
+              field: "usernameOrEmail",
+              message: "Username or email incorrect",
+            },
+          ],
+        };
 
-      const passwordValid = await comparePassword(existingUser.password, password);
+      const passwordValid = await comparePassword(
+        existingUser.password,
+        password
+      );
 
       if (!passwordValid)
-      return {
-        code: 400,
-        success: false,
-        message: "Wrong password",
-        errors: [
-          {
-            field: "password",
-            message: "Wrong password"
-          }
-        ]
-      };
+        return {
+          code: 400,
+          success: false,
+          message: "Wrong password",
+          errors: [
+            {
+              field: "password",
+              message: "Wrong password",
+            },
+          ],
+        };
 
       // Create session and return cookies
       // session: userID = existingUser.id
       req.session.userID = existingUser.id;
-      
 
       return {
         code: 200,
         success: true,
         message: "Logged in successfull",
-        user: existingUser
+        user: existingUser,
       };
-    }
-    catch (error) {
+    } catch (error) {
       console.log("Failed: ", error);
       return {
         code: 500,
@@ -123,5 +130,21 @@ export class UserResolver {
         message: `Internal server error: ${error.message}`,
       };
     }
+  }
+
+  @Mutation((_returns) => Boolean)
+  logout(@Ctx() { req, res }: Context): Promise<boolean> {
+    
+    return new Promise((resolve, _reject) => {
+      res.clearCookie(COOKIE_NAME);
+
+      req.session.destroy((error) => {
+        if (error) {
+          console.log("DESTROYING SESSION ERROR: ", error);
+          resolve(false);
+        }
+        resolve(true);
+      });
+    });
   }
 }
