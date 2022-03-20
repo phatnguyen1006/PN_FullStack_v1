@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import express from "express";
+import cors from "cors";
 import { dbORM } from "./db_ORM";
 import dbMongo from "./db_mongo";
 import { apolloServerConfiguration } from "./apolloServer";
@@ -15,6 +16,11 @@ const main = async () => {
   await dbMongo.connectDB();
 
   const app = express();
+
+  app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+  }))
 
   // session/cookies
   app.use(session({

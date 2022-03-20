@@ -7,22 +7,22 @@ import Wrapper from "../components/Wraper";
 import { registerMutation } from "../graphql-client/mutations";
 import { useMutation } from "@apollo/client";
 
+interface UserMutationResponse {
+  code: number;
+  success: boolean;
+  message: string;
+  user: string;
+  errors: string;
+}
+
+interface NewUserInput {
+  username: string;
+  email: string;
+  password: string;
+}
+
 const Register = () => {
   const initialValues: NewUserInput = { email: "", username: "", password: "" };
-
-  interface UserMutationResponse {
-    code: number;
-    success: boolean;
-    message: string;
-    user: string;
-    errors: string;
-  }
-
-  interface NewUserInput {
-    username: string;
-    email: string;
-    password: string;
-  }
 
   const [registerUser, { data, error }] = useMutation<
     { register: UserMutationResponse },
@@ -39,12 +39,11 @@ const Register = () => {
 
   return (
     <Wrapper>
-        {error && <p>Failed to register</p>}
-        {data && data.register.success && <p>Register successfully {JSON.stringify(data)}</p>}
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onRegisterSubmit}
-      >
+      {error && <p>Failed to register</p>}
+      {data && data.register.success && (
+        <p>Register successfully {JSON.stringify(data)}</p>
+      )}
+      <Formik initialValues={initialValues} onSubmit={onRegisterSubmit}>
         {({ isSubmitting }) => (
           <Form>
             <FormControl>
