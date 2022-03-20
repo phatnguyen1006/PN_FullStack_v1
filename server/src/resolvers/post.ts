@@ -1,12 +1,11 @@
-import { Arg, Ctx, ID, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import {
   PostMutationResponse,
   ICreatePostInput,
   IUpdatePostInput,
-  Context
 } from "../types";
 import { Post } from "../entities";
-import { ApolloUnAuthorizedError } from "../helpers/errors";
+import { checkAuth } from "../middlewares/graph";
 
 @Resolver()
 export class PostResolver {
@@ -33,6 +32,7 @@ export class PostResolver {
   }
 
   @Mutation((_return) => PostMutationResponse)
+  @UseMiddleware(checkAuth)
   async createPost(
     @Arg("createPostInput") { title, text }: ICreatePostInput
   ): Promise<PostMutationResponse> {
@@ -61,6 +61,7 @@ export class PostResolver {
   }
 
   @Mutation((_return) => PostMutationResponse)
+  @UseMiddleware(checkAuth)
   async updatePost(
     @Arg("updatePostInput") { id, title, text }: IUpdatePostInput
   ): Promise<PostMutationResponse> {
@@ -96,14 +97,10 @@ export class PostResolver {
   }
 
   @Mutation((_return) => PostMutationResponse)
+  @UseMiddleware(checkAuth)
   async deletePost(
     @Arg("id", (_type) => ID) id: number,
-    @Ctx() { req }: Context
   ): Promise<PostMutationResponse> {
-    if (!req.session.userID) {
-      throw new ApolloUnAuthorizedError();
-    }
-
     try {
       const existingPost = await Post.findOne(id);
 
