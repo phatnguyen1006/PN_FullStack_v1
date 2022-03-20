@@ -14,8 +14,16 @@ export const apolloServerConfiguration = async (app: Application) => {
       resolvers: [HelloResolver, UserResolver],
       validate: false,
     }), // register resolvers
+    context: ({ req, res }) => ({ req, res }),
     // playground for test query, or use the original website
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    plugins: [
+      ApolloServerPluginLandingPageGraphQLPlayground({
+        settings: {
+          "request.credentials": "include",
+          "editor.reuseHeaders": false,
+        },
+      }),
+    ],
   });
 
   await apolloServer.start(); // start server before do something

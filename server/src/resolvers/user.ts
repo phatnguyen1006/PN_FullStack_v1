@@ -1,7 +1,7 @@
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { User } from "../entities";
 // types
-import { UserMutationResponse, IRegisterInput, ILoginInput } from "../types";
+import { UserMutationResponse, IRegisterInput, ILoginInput, Context } from "../types";
 // util
 import { validateRegisterInput } from "../utils/validations";
 // helper function
@@ -65,7 +65,8 @@ export class UserResolver {
 
   @Mutation((_returns) => UserMutationResponse)
   async login(
-    @Arg("loginInput") { usernameOrEmail, password }: ILoginInput
+    @Arg("loginInput") { usernameOrEmail, password }: ILoginInput,
+    @Ctx() { req }: Context
   ): Promise<UserMutationResponse> {
     try {
       const existingUser = await User.findOne(
@@ -96,11 +97,16 @@ export class UserResolver {
         message: "Wrong password",
         errors: [
           {
-            field: "Password",
+            field: "password",
             message: "Wrong password"
           }
         ]
       };
+
+      // Create session and return cookies
+      // session: userID = existingUser.id
+      req.session.userID = existingUser.id;
+      
 
       return {
         code: 200,
