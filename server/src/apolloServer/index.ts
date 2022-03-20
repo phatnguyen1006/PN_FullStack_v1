@@ -9,18 +9,18 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { HelloResolver, UserResolver } from "../resolvers";
 
 export const apolloServerConfiguration = async (app: Application) => {
-    const apolloServer = new ApolloServer({
-        schema: await buildSchema({
-          resolvers: [HelloResolver, UserResolver],
-          validate: false,
-        }), // register resolvers
-        // playground for test query, or use the original website
-        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-      });
-    
-      await apolloServer.start(); // start server before do something
-    
-      apolloServer.applyMiddleware({ app, cors: false }); // apply GraphQL/Apollo to stand before server
+  const apolloServer = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [HelloResolver, UserResolver],
+      validate: false,
+    }), // register resolvers
+    // playground for test query, or use the original website
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  });
 
-      return apolloServer;
-}
+  await apolloServer.start(); // start server before do something
+
+  apolloServer.applyMiddleware({ app, cors: false }); // apply GraphQL/Apollo to stand before server
+
+  return apolloServer;
+};

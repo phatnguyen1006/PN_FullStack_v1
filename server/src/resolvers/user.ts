@@ -1,15 +1,15 @@
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { User } from "../entities";
 // types
-import { UserMutationResponse, IRegisterInput } from "../types";
+import { UserMutationResponse, IRegisterInput, ILoginInput } from "../types";
 // util
 import { validateRegisterInput } from "../utils/validations";
 // helper function
-import { hashPassword } from "../helpers/crypt";
+import { hashPassword, comparePassword } from "../helpers/crypt";
 
 @Resolver()
 export class UserResolver {
-  @Mutation((_returns) => UserMutationResponse, { nullable: true })
+  @Mutation((_returns) => UserMutationResponse)
   async register(
     @Arg("registerInput") registerInput: IRegisterInput
   ): Promise<UserMutationResponse> {
@@ -54,6 +54,62 @@ export class UserResolver {
         user: await User.save(newUser),
       };
     } catch (error) {
+      console.log("Failed: ", error);
+      return {
+        code: 500,
+        success: false,
+        message: `Internal server error: ${error.message}`,
+      };
+    }
+  }
+
+  @Mutation((_returns) => UserMutationResponse)
+  async login(
+    @Arg("loginInput") { usernameOrEmail, password }: ILoginInput
+  ): Promise<UserMutationResponse> {
+    try {
+      const existingUser = await User.findOne(
+        usernameOrEmail.includes("@")
+          ? { email: usernameOrEmail }
+          : { username: usernameOrEmail }
+      );
+
+      if (!existingUser)
+      return {
+        code: 400,
+        success: false,
+        message: "User not found",
+        errors: [
+          {
+            field: "usernameOrEmail",
+            message: "Username or email incorrect"
+          }
+        ]
+      };
+
+      const passwordValid = await comparePassword(existingUser.password, password);
+
+      if (!passwordValid)
+      return {
+        code: 400,
+        success: false,
+        message: "Wrong password",
+        errors: [
+          {
+            field: "Password",
+            message: "Wrong password"
+          }
+        ]
+      };
+
+      return {
+        code: 200,
+        success: true,
+        message: "Logged in successfull",
+        user: existingUser
+      };
+    }
+    catch (error) {
       console.log("Failed: ", error);
       return {
         code: 500,

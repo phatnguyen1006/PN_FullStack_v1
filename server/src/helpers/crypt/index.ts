@@ -4,4 +4,6 @@ export const hashPassword = async (password: string): Promise<string> => {
     return await argon2.hash(password);
 }
 
-export const comparePassword = () => {}
+export const comparePassword = async (dbpassword: string, password: string): Promise<boolean> => {
+    return await argon2.verify(dbpassword, password);
+}
