@@ -15,9 +15,10 @@ import { COOKIE_NAME } from "../constants";
 
 @Resolver()
 export class UserResolver {
-  @Mutation((_returns) => UserMutationResponse)
+  @Mutation((_return) => UserMutationResponse)
   async register(
-    @Arg("registerInput") registerInput: IRegisterInput
+    @Arg("registerInput") registerInput: IRegisterInput,
+    @Ctx() { req }: Context
   ): Promise<UserMutationResponse> {
     const validationRegisterInputErrors = validateRegisterInput(registerInput);
 
@@ -53,11 +54,15 @@ export class UserResolver {
         email,
       });
 
+      await newUser.save();
+
+      req.session.userID = newUser.id;
+
       return {
         code: 200,
         success: true,
         message: "User registration successful",
-        user: await User.save(newUser),
+        user: newUser,
       };
     } catch (error) {
       console.log("Failed: ", error);
@@ -69,7 +74,7 @@ export class UserResolver {
     }
   }
 
-  @Mutation((_returns) => UserMutationResponse)
+  @Mutation((_return) => UserMutationResponse)
   async login(
     @Arg("loginInput") { usernameOrEmail, password }: ILoginInput,
     @Ctx() { req }: Context
@@ -132,7 +137,7 @@ export class UserResolver {
     }
   }
 
-  @Mutation((_returns) => Boolean)
+  @Mutation((_return) => Boolean)
   logout(@Ctx() { req, res }: Context): Promise<boolean> {
     
     return new Promise((resolve, _reject) => {

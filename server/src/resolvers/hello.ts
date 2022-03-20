@@ -3,7 +3,7 @@ import { Context } from "../types";
 
 @Resolver()
 export class HelloResolver {
-    @Query(_returns => String)
+    @Query(_return => String)
     hello(
         @Ctx() { req }: Context
     ) {

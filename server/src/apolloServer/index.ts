@@ -6,12 +6,12 @@ import { buildSchema } from "type-graphql";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 // Resolvers
-import { HelloResolver, UserResolver } from "../resolvers";
+import { HelloResolver, PostResolver, UserResolver } from "../resolvers";
 
 export const apolloServerConfiguration = async (app: Application) => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
+      resolvers: [HelloResolver, UserResolver, PostResolver],
       validate: false,
     }), // register resolvers
     context: ({ req, res }) => ({ req, res }),
