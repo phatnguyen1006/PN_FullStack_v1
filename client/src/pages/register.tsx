@@ -1,40 +1,34 @@
 import { Box, Button, FormControl } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers as FormikActions } from "formik";
+import { useRouter } from "next/router";
 import InputField from "../components/InputField";
 // components
 import Wrapper from "../components/Wraper";
 
-import { registerMutation } from "../graphql-client/mutations";
-import { useMutation } from "@apollo/client";
-
-interface UserMutationResponse {
-  code: number;
-  success: boolean;
-  message: string;
-  user: string;
-  errors: string;
-}
-
-interface NewUserInput {
-  username: string;
-  email: string;
-  password: string;
-}
+import { IRegisterInput, useRegisterMutation } from "../generated/graphql";
+import { inputFieldError } from "../helpers/inputFieldError";
 
 const Register = () => {
-  const initialValues: NewUserInput = { email: "", username: "", password: "" };
+  const router = useRouter();
 
-  const [registerUser, { data, error }] = useMutation<
-    { register: UserMutationResponse },
-    { registerInput: NewUserInput }
-  >(registerMutation);
+  const initialValues: IRegisterInput = { email: "", username: "", password: "" };
 
-  const onRegisterSubmit = (values: NewUserInput) => {
-    return registerUser({
+  const [registerUser, { loading: _registerUserLoading, data, error }] = useRegisterMutation();
+
+  const onRegisterSubmit = async (values: IRegisterInput, {setErrors}: FormikActions<IRegisterInput> ) => {
+
+    const response = await registerUser({
       variables: {
         registerInput: values,
-      },
+      }
     });
+
+    if (response.data?.register.errors) {
+      setErrors(inputFieldError(response.data.register.errors));
+    }
+    else if (response.data?.register.user) {
+      router.push("/");
+    }
   };
 
   return (
