@@ -1,4 +1,10 @@
+import NavBar from "../components/Layout/NavBar";
 
-const Index = () => <h1>Hello Wolrd</h1>;
+const Index = () => (
+    <>
+        <NavBar />
+        <h1>Hello Wolrd</h1>
+    </>
+);
 
 export default Index;

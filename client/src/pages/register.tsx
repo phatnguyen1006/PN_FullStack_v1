@@ -6,7 +6,7 @@ import InputField from "../components/InputField";
 import Wrapper from "../components/Wraper";
 
 import { IRegisterInput, useRegisterMutation } from "../generated/graphql";
-import { inputFieldError } from "../helpers/inputFieldError";
+import { inputFieldError } from "../helpers/errors/inputFieldError";
 
 const Register = () => {
   const router = useRouter();

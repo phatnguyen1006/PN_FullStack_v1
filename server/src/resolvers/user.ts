@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entities";
 // types
 import {
@@ -15,6 +15,13 @@ import { COOKIE_NAME } from "../constants";
 
 @Resolver()
 export class UserResolver {
+  @Query((_return) => User, { nullable: true })
+  async me(@Ctx() { req }: Context): Promise<User | undefined | null> {
+    if (!req.session.userID) return null;
+    const user = await User.findOne(req.session.userID);
+    return user;
+  }
+
   @Mutation((_return) => UserMutationResponse)
   async register(
     @Arg("registerInput") registerInput: IRegisterInput,
@@ -139,7 +146,6 @@ export class UserResolver {
 
   @Mutation((_return) => Boolean)
   logout(@Ctx() { req, res }: Context): Promise<boolean> {
-    
     return new Promise((resolve, _reject) => {
       res.clearCookie(COOKIE_NAME);
 
