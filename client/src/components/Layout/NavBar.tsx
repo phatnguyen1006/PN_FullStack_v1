@@ -17,7 +17,7 @@ const NavBar = () => {
         if (data?.logout) {
           cache.writeQuery<MeQuery>({
             query: MeDocument,
-            data: { me: null },
+            data: { me: null }, // reset cache
           });
         }
       },
