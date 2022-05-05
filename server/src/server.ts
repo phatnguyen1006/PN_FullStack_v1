@@ -7,6 +7,7 @@ import { apolloServerConfiguration } from "./apolloServer";
 import session from "express-session";
 // constants
 import { COOKIE_NAME, SESSION_SECRET, __prod__ } from "./constants";
+import { sendEmail } from "./utils/nodemail";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 const main = async () => {
   await dbORM();
   await dbMongo.connectDB();
+  await sendEmail("user@gmail.com", "<b>Hello Phat Nguyen</b>");
 
   const app = express();
 

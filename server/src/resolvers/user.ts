@@ -5,6 +5,7 @@ import {
   UserMutationResponse,
   IRegisterInput,
   ILoginInput,
+  IForgotPasswordInput,
   Context,
 } from "../types";
 // util
@@ -157,5 +158,10 @@ export class UserResolver {
         resolve(true);
       });
     });
+  }
+
+  @Mutation(_return => Boolean)
+  async forgotPassword(@Arg('forgotPasswordInput') forgotPasswordInput: IForgotPasswordInput) {
+
   }
 }
