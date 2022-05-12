@@ -13,6 +13,8 @@ import { validateRegisterInput } from "../utils/validations";
 // helper function
 import { hashPassword, comparePassword } from "../helpers/crypt";
 import { COOKIE_NAME } from "../constants";
+import { sendEmail } from "../utils/nodemail";
+import { TokenModel } from "../models/token";
 
 @Resolver()
 export class UserResolver {
@@ -161,7 +163,17 @@ export class UserResolver {
   }
 
   @Mutation(_return => Boolean)
-  async forgotPassword(@Arg('forgotPasswordInput') forgotPasswordInput: IForgotPasswordInput) {
+  async forgotPassword(@Arg('forgotPasswordInput') forgotPasswordInput: IForgotPasswordInput): Promise<boolean> {
+    const user = await User.findOne({email: forgotPasswordInput.email});
 
+    if (!user) return true;
+
+    const token: string = "asd";
+
+    await new TokenModel({ userID: `${user.id}`, token }).save();
+
+    await sendEmail("ronaldo@gmail.com", `<a href="">Click here to reset your password</a>`);
+
+    return true;
   }
 }
