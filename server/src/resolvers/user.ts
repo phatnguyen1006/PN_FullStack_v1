@@ -17,7 +17,6 @@ import { sendEmail } from "../utils/nodemail";
 import { TokenModel } from "../models/token";
 import { v4 as uuidv4 } from "uuid";
 
-
 @Resolver()
 export class UserResolver {
   @Query((_return) => User, { nullable: true })
@@ -164,9 +163,11 @@ export class UserResolver {
     });
   }
 
-  @Mutation(_return => Boolean)
-  async forgotPassword(@Arg('forgotPasswordInput') forgotPasswordInput: IForgotPasswordInput): Promise<boolean> {
-    const user = await User.findOne({email: forgotPasswordInput.email});
+  @Mutation((_return) => Boolean)
+  async forgotPassword(
+    @Arg("forgotPasswordInput") forgotPasswordInput: IForgotPasswordInput
+  ): Promise<boolean> {
+    const user = await User.findOne({ email: forgotPasswordInput.email });
 
     if (!user) return true;
 
@@ -174,9 +175,15 @@ export class UserResolver {
 
     const hashedResetToken = await hashPassword(resetToken);
 
-    await new TokenModel({ userID: `${user.id}`, hashedResetToken }).save();
+    await new TokenModel({
+      userID: `${user.id}`,
+      token: hashedResetToken,
+    }).save();
 
-    await sendEmail(forgotPasswordInput.email, `<a href="http://localhost:3000/change-password?token=${resetToken}">Click here to reset your password</a>`);
+    await sendEmail(
+      forgotPasswordInput.email,
+      `<a href="http://localhost:3000/change-password?token=${resetToken}&userID=${user.id}">Click here to reset your password</a>`
+    );
 
     return true;
   }

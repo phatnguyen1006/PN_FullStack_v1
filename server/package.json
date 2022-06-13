@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@typegoose/typegoose": "^9.8.1",
+    "@types/uuid": "^8.3.4",
     "apollo-server-core": "^3.6.4",
     "apollo-server-express": "^3.6.4",
     "argon2": "^0.28.5",

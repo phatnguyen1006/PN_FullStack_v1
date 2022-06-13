@@ -3,7 +3,7 @@ import { Form, Formik, FormikHelpers as FormikActions } from "formik";
 import { useRouter } from "next/router";
 import InputField from "../components/InputField";
 // components
-import Wrapper from "../components/Wraper";
+import Wrapper from "../components/Wrapper";
 import {
   ILoginInput,
   MeDocument,
@@ -79,7 +79,6 @@ const Login = () => {
           <Formik initialValues={initialValues} onSubmit={onLoginSubmit}>
             {({ isSubmitting }) => (
               <Form>
-                <FormControl>
                   <InputField
                     name="usernameOrEmail"
                     placeholder="Username or Email"
@@ -103,7 +102,6 @@ const Login = () => {
                   >
                     Login
                   </Button>
-                </FormControl>
               </Form>
             )}
           </Formik>
