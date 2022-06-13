@@ -15,6 +15,8 @@ import { hashPassword, comparePassword } from "../helpers/crypt";
 import { COOKIE_NAME } from "../constants";
 import { sendEmail } from "../utils/nodemail";
 import { TokenModel } from "../models/token";
+import { v4 as uuidv4 } from "uuid";
+
 
 @Resolver()
 export class UserResolver {
@@ -168,11 +170,13 @@ export class UserResolver {
 
     if (!user) return true;
 
-    const token: string = "asd";
+    const resetToken = uuidv4();
 
-    await new TokenModel({ userID: `${user.id}`, token }).save();
+    const hashedResetToken = await hashPassword(resetToken);
 
-    await sendEmail("ronaldo@gmail.com", `<a href="">Click here to reset your password</a>`);
+    await new TokenModel({ userID: `${user.id}`, hashedResetToken }).save();
+
+    await sendEmail(forgotPasswordInput.email, `<a href="http://localhost:3000/change-password?token=${resetToken}">Click here to reset your password</a>`);
 
     return true;
   }
