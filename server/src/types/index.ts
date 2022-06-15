@@ -13,3 +13,4 @@ export * from "./LoginInput";
 export * from "./CreatePostInput";
 export * from "./UpdatePostInput";
 export * from "./ForgotPasswordInput";
+export * from "./ChangePasswordInput";
