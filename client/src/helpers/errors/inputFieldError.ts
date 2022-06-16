@@ -1,6 +1,10 @@
 import { FieldError } from "../../generated/graphql";
 
-export const inputFieldError = (errors: FieldError[]) => {
+interface IFieldError {
+  [key: string]: string
+}
+
+export const inputFieldError = (errors: FieldError[]): IFieldError => {
   return errors.reduce(
     (accumulatedErrorObj, error) => ({
       ...accumulatedErrorObj,

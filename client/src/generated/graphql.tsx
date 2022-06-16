@@ -23,6 +23,10 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type IChangePasswordInput = {
+  newPassword: Scalars['String'];
+};
+
 export type ICreatePostInput = {
   text: Scalars['String'];
   title: Scalars['String'];
@@ -57,6 +61,7 @@ export type IUpdatePostInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changePassword: UserMutationResponse;
   createPost: PostMutationResponse;
   deletePost: PostMutationResponse;
   forgotPassword: Scalars['Boolean'];
@@ -64,6 +69,13 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserMutationResponse;
   updatePost: PostMutationResponse;
+};
+
+
+export type MutationChangePasswordArgs = {
+  changePasswordInput: IChangePasswordInput;
+  token: Scalars['String'];
+  userID: Scalars['String'];
 };
 
 
@@ -153,6 +165,15 @@ export type UserInfoFragment = { __typename?: 'User', id: string, username: stri
 
 export type UserMutationResponseFragment = { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: string | null, user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null };
 
+export type ChangePasswordMutationVariables = Exact<{
+  userID: Scalars['String'];
+  token: Scalars['String'];
+  changePasswordInput: IChangePasswordInput;
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: string | null, user?: { __typename?: 'User', id: string, username: string, email: string } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+
 export type ForgotPasswordMutationVariables = Exact<{
   forgotPasswordInput: IForgotPasswordInput;
 }>;
@@ -222,6 +243,45 @@ export const UserMutationResponseFragmentDoc = gql`
     ${MutationStatusesFragmentDoc}
 ${UserInfoFragmentDoc}
 ${FieldErrorFragmentDoc}`;
+export const ChangePasswordDocument = gql`
+    mutation changePassword($userID: String!, $token: String!, $changePasswordInput: IChangePasswordInput!) {
+  changePassword(
+    userID: $userID
+    token: $token
+    changePasswordInput: $changePasswordInput
+  ) {
+    ...userMutationResponse
+  }
+}
+    ${UserMutationResponseFragmentDoc}`;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      userID: // value for 'userID'
+ *      token: // value for 'token'
+ *      changePasswordInput: // value for 'changePasswordInput'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($forgotPasswordInput: IForgotPasswordInput!) {
   forgotPassword(forgotPasswordInput: $forgotPasswordInput)
