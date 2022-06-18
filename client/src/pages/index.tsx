@@ -1,3 +1,13 @@
+import {
+  Box,
+  Flex,
+  Heading,
+  Link,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import NavBar from "../components/Layout/NavBar";
 import { PostDocument, usePostQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
@@ -8,13 +18,28 @@ const Index = () => {
     <>
       <NavBar />
       {loading ? (
-        "...Loading"
+        <Flex justifyContent="center" alignItems="center" minH="100vh">
+          <Spinner />
+        </Flex>
       ) : (
-        <ul>
+        <Stack>
           {data?.post?.map((post) => (
-            <li key={post.id}>{post.title}</li>
+            <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
+              <Box>
+                <NextLink href={`/post/${post.id}`}>
+                  <Link>
+                    <Heading fontSize="xl">{post.title}</Heading>
+                  </Link>
+                </NextLink>
+                <Text>POST BY USER</Text>
+                <Flex align={"center"}>
+                  <Text mt={4}>{post.text} -- SNIPPET</Text>
+                  <Box ml={"auto"}>EDIT BUTTON</Box>
+                </Flex>
+              </Box>
+            </Flex>
           ))}
-        </ul>
+        </Stack>
       )}
     </>
   );
