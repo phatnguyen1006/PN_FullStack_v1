@@ -5,5 +5,9 @@ query Post {
         text
         createdAt
         updatedAt
+        textSnippet
+        user {
+            username
+        }
     }
 }

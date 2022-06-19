@@ -1,14 +1,33 @@
-import { Arg, ID, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+  UseMiddleware,
+} from "type-graphql";
 import {
   PostMutationResponse,
   ICreatePostInput,
   IUpdatePostInput,
 } from "../types";
-import { Post } from "../entities";
+import { Post, User } from "../entities";
 import { checkAuth } from "../middlewares/graph";
 
-@Resolver()
+@Resolver((_of) => Post)
 export class PostResolver {
+  @FieldResolver((_return) => String)
+  textSnippet(@Root() root: Post) {
+    return root.text.slice(0, 50);
+  }
+
+  @FieldResolver((_return) => User)
+  async user(@Root() root: Post) {
+    return await User.findOne(root.userID);
+  }
+
   @Query((_return) => [Post], { nullable: true })
   async post(): Promise<Post[] | null> {
     try {
@@ -99,7 +118,7 @@ export class PostResolver {
   @Mutation((_return) => PostMutationResponse)
   @UseMiddleware(checkAuth)
   async deletePost(
-    @Arg("id", (_type) => ID) id: number,
+    @Arg("id", (_type) => ID) id: number
   ): Promise<PostMutationResponse> {
     try {
       const existingPost = await Post.findOne(id);
@@ -116,7 +135,7 @@ export class PostResolver {
       return {
         code: 200,
         success: true,
-        message: "Post deleted successfully"
+        message: "Post deleted successfully",
       };
     } catch (error) {
       console.log("Failed: ", error);
