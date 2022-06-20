@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   FieldResolver,
   ID,
   Mutation,
@@ -12,6 +13,7 @@ import {
   PostMutationResponse,
   ICreatePostInput,
   IUpdatePostInput,
+  Context
 } from "../types";
 import { Post, User } from "../entities";
 import { checkAuth } from "../middlewares/graph";
@@ -53,12 +55,15 @@ export class PostResolver {
   @Mutation((_return) => PostMutationResponse)
   @UseMiddleware(checkAuth)
   async createPost(
-    @Arg("createPostInput") { title, text }: ICreatePostInput
+    @Arg("createPostInput") { title, text }: ICreatePostInput,
+    @Ctx() { req }: Context
   ): Promise<PostMutationResponse> {
     try {
+      
       const newPost = Post.create({
         title,
         text,
+        userID: req.session.userID,
       });
 
       await newPost.save();

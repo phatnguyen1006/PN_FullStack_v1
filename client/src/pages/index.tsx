@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Layout from "../components/Layout";
+import PostActionButton from "../components/PostActionButton";
 import { PostDocument, usePostQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
@@ -33,7 +34,9 @@ const Index = () => {
                 <Text>POST BY {post.user.username}</Text>
                 <Flex align={"center"}>
                   <Text mt={4}>{post.textSnippet}...</Text>
-                  <Box ml={"auto"}>EDIT BUTTON</Box>
+                  <Box ml={"auto"}>
+                    <PostActionButton />
+                  </Box>
                 </Flex>
               </Box>
             </Flex>

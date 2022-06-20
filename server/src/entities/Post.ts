@@ -19,7 +19,7 @@ export class Post extends BaseEntity {
 
   @Field()
   @Column()
-  userID!: string;
+  userID!: number;
 
   @Field()
   @Column()
