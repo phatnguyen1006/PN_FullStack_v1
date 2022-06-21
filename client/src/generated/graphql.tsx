@@ -108,6 +108,14 @@ export type MutationUpdatePostArgs = {
   updatePostInput: IUpdatePostInput;
 };
 
+export type PaginatedPosts = {
+  __typename?: 'PaginatedPosts';
+  cursor: Scalars['DateTime'];
+  hasMore: Scalars['Boolean'];
+  paginatedPosts: Array<Post>;
+  totalCount: Scalars['Float'];
+};
+
 export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['DateTime'];
@@ -117,7 +125,7 @@ export type Post = {
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   user: User;
-  userID: Scalars['String'];
+  userID: Scalars['Float'];
 };
 
 export type PostMutationResponse = IMutationResponse & {
@@ -134,12 +142,18 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   onePost?: Maybe<Post>;
-  post?: Maybe<Array<Post>>;
+  posts?: Maybe<PaginatedPosts>;
 };
 
 
 export type QueryOnePostArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryPostsArgs = {
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 export type User = {
@@ -208,10 +222,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
 
-export type PostQueryVariables = Exact<{ [key: string]: never; }>;
+export type PostsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+}>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: Array<{ __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, user: { __typename?: 'User', username: string } }> | null };
+export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PaginatedPosts', totalCount: number, cursor: any, hasMore: boolean, paginatedPosts: Array<{ __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', username: string } }> } | null };
 
 export const MutationStatusesFragmentDoc = gql`
     fragment mutationStatuses on UserMutationResponse {
@@ -446,45 +463,53 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const PostDocument = gql`
-    query Post {
-  post {
-    id
-    title
-    text
-    createdAt
-    updatedAt
-    textSnippet
-    user {
-      username
+export const PostsDocument = gql`
+    query Posts($limit: Int!, $cursor: String) {
+  posts(limit: $limit, cursor: $cursor) {
+    totalCount
+    cursor
+    hasMore
+    paginatedPosts {
+      id
+      title
+      text
+      createdAt
+      updatedAt
+      textSnippet
+      userID
+      user {
+        username
+      }
     }
   }
 }
     `;
 
 /**
- * __usePostQuery__
+ * __usePostsQuery__
  *
- * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
- * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usePostQuery({
+ * const { data, loading, error } = usePostsQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
-export function usePostQuery(baseOptions?: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+export function usePostsQuery(baseOptions: Apollo.QueryHookOptions<PostsQuery, PostsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+        return Apollo.useQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
       }
-export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
+export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostsQuery, PostsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+          return Apollo.useLazyQuery<PostsQuery, PostsQueryVariables>(PostsDocument, options);
         }
-export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
-export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
-export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
+export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
+export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
+export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
