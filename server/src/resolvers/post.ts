@@ -3,6 +3,7 @@ import {
   Ctx,
   FieldResolver,
   ID,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -13,10 +14,12 @@ import {
   PostMutationResponse,
   ICreatePostInput,
   IUpdatePostInput,
-  Context
+  Context,
+  PaginatedPosts,
 } from "../types";
 import { Post, User } from "../entities";
 import { checkAuth } from "../middlewares/graph";
+import { LessThan } from "typeorm";
 
 @Resolver((_of) => Post)
 export class PostResolver {
@@ -30,10 +33,40 @@ export class PostResolver {
     return await User.findOne(root.userID);
   }
 
-  @Query((_return) => [Post], { nullable: true })
-  async post(): Promise<Post[] | null> {
+  @Query((_return) => PaginatedPosts, { nullable: true })
+  async posts(
+    @Arg("limit", (_type) => Int) limit: number,
+    @Arg("cursor", { nullable: true }) cursor?: string
+  ): Promise<PaginatedPosts | null> {
     try {
-      return await Post.find();
+      const totalPostCount = await Post.count();
+      const realLimit = Math.min(10, limit);
+
+      const findOptions: { [key: string]: any } = {
+        order: {
+          createdAt: "DESC",
+        },
+        take: realLimit,
+      };
+
+      let lastPost: Post[] = [];
+      if (cursor) {
+        findOptions.where = { createdAt: LessThan(cursor) };
+
+        lastPost = await Post.find({ order: { createdAt: "ASC" }, take: 1 });
+      }
+
+      const posts = await Post.find(findOptions);
+
+      return {
+        totalCount: totalPostCount,
+        cursor: posts[posts.length - 1].createdAt,
+        hasMore: cursor
+          ? posts[posts.length - 1].createdAt.toString() !==
+            lastPost[0].createdAt.toString()
+          : posts.length !== totalPostCount,
+        paginatedPosts: posts,
+      };
     } catch (error) {
       console.log("Failed: ", error);
       return null;
@@ -59,7 +92,6 @@ export class PostResolver {
     @Ctx() { req }: Context
   ): Promise<PostMutationResponse> {
     try {
-      
       const newPost = Post.create({
         title,
         text,

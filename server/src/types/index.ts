@@ -6,6 +6,7 @@ export * from "./FieldError";
 export * from "./Context";
 export * from "./UserMutationResponse";
 export * from "./PostMutationResponse";
+export * from "./PaginatedPosts";
 
 /** @public @input */
 export * from "./RegisterInput";

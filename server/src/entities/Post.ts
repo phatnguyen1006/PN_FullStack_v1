@@ -30,11 +30,11 @@ export class Post extends BaseEntity {
   text!: string;
 
   @Field()
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })    // timestampt with zone
   createdAt: Date;
 
   @Field()
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz" })    // timestampt with zone
   updatedAt: Date;
 
   // FOREIGN KEYS
