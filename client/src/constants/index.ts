@@ -1,3 +1,3 @@
 
 // post limit
-export const POST_LIMIT = 1;
+export const POST_LIMIT = 2;
