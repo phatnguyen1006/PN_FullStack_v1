@@ -1,0 +1,14 @@
+# Write your query or mutation here
+mutation CreatePost($createPostInput: ICreatePostInput!) {
+  createPost(createPostInput: $createPostInput) {
+    code
+    success
+    message
+    post {
+      ...postWithUserInfo
+    }
+    errors {
+      ...fieldError
+    }
+  }
+}

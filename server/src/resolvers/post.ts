@@ -119,7 +119,8 @@ export class PostResolver {
   @Mutation((_return) => PostMutationResponse)
   @UseMiddleware(checkAuth)
   async updatePost(
-    @Arg("updatePostInput") { id, title, text }: IUpdatePostInput
+    @Arg("updatePostInput") { id, title, text }: IUpdatePostInput,
+    @Ctx() { req }: Context
   ): Promise<PostMutationResponse> {
     try {
       const existingPost = await Post.findOne(id);
@@ -130,6 +131,14 @@ export class PostResolver {
           success: false,
           message: "Post not found",
         };
+
+      if (existingPost.userID !== req.session.userID) {
+        return {
+          code: 401,
+          success: false,
+          message: "Unauthorized",
+        };
+      }
 
       existingPost.title = title;
       existingPost.text = text;
@@ -155,7 +164,8 @@ export class PostResolver {
   @Mutation((_return) => PostMutationResponse)
   @UseMiddleware(checkAuth)
   async deletePost(
-    @Arg("id", (_type) => ID) id: number
+    @Arg("id", (_type) => ID) id: number,
+    @Ctx() { req }: Context
   ): Promise<PostMutationResponse> {
     try {
       const existingPost = await Post.findOne(id);
@@ -166,6 +176,14 @@ export class PostResolver {
           success: false,
           message: "Post not found",
         };
+
+      if (existingPost.userID !== req.session.userID) {
+        return {
+          code: 401,
+          success: false,
+          message: "Unauthorized",
+        };
+      }
 
       await Post.delete({ id });
 
