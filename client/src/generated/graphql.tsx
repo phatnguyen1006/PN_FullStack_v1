@@ -178,7 +178,7 @@ export type FieldErrorFragment = { __typename?: 'FieldError', field: string, mes
 
 export type MutationStatusesFragment = { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: string | null };
 
-export type PostWithUserInfoFragment = { __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', username: string } };
+export type PostWithUserInfoFragment = { __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', id: string, username: string } };
 
 export type UserInfoFragment = { __typename?: 'User', id: string, username: string, email: string };
 
@@ -198,7 +198,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostMutationResponse', code: number, success: boolean, message?: string | null, post?: { __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', username: string } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostMutationResponse', code: number, success: boolean, message?: string | null, post?: { __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', id: string, username: string } } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   forgotPasswordInput: IForgotPasswordInput;
@@ -236,7 +236,7 @@ export type OnePostQueryVariables = Exact<{
 }>;
 
 
-export type OnePostQuery = { __typename?: 'Query', onePost?: { __typename?: 'Post', id: string, title: string, text: string } | null };
+export type OnePostQuery = { __typename?: 'Query', onePost?: { __typename?: 'Post', id: string, title: string, text: string, userID: number } | null };
 
 export type PostIdsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -252,7 +252,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PaginatedPosts', totalCount: number, cursor: any, hasMore: boolean, paginatedPosts: Array<{ __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', username: string } }> } | null };
+export type PostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PaginatedPosts', totalCount: number, cursor: any, hasMore: boolean, paginatedPosts: Array<{ __typename?: 'Post', id: string, title: string, text: string, createdAt: any, updatedAt: any, textSnippet: string, userID: number, user: { __typename?: 'User', id: string, username: string } }> } | null };
 
 export const PostWithUserInfoFragmentDoc = gql`
     fragment postWithUserInfo on Post {
@@ -264,6 +264,7 @@ export const PostWithUserInfoFragmentDoc = gql`
   textSnippet
   userID
   user {
+    id
     username
   }
 }
@@ -549,6 +550,7 @@ export const OnePostDocument = gql`
     id
     title
     text
+    userID
   }
 }
     `;

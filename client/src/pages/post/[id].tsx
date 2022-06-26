@@ -30,6 +30,15 @@ const Post: React.FC = () => {
         variables: { id: router.query.id as string },
     });
 
+    if (loading)
+        return (
+            <Layout>
+                <Flex justifyContent="center" alignItems="center" minH="100vh">
+                    <Spinner />
+                </Flex>
+            </Layout>
+        );
+
     if (error || !data?.onePost) {
         return (
             <Layout>
@@ -50,21 +59,13 @@ const Post: React.FC = () => {
 
     return (
         <Layout>
-            {loading ? (
-                <Flex justifyContent="center" alignItems="center" minH="100vh">
-                    <Spinner />
-                </Flex>
-            ) : (
-                <>
-                    <Heading mb={4}>{data?.onePost?.title}</Heading>
-                    <Box mb={4}>{data?.onePost?.text}</Box>
-                    <Flex>
-                        <NextLink href="/">
-                            <Button>Back to Home page</Button>
-                        </NextLink>
-                    </Flex>
-                </>
-            )}
+            <Heading mb={4}>{data?.onePost?.title}</Heading>
+            <Box mb={4}>{data?.onePost?.text}</Box>
+            <Flex>
+                <NextLink href="/">
+                    <Button>Back to Home page</Button>
+                </NextLink>
+            </Flex>
         </Layout>
     );
 };

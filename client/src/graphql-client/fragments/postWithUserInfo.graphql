@@ -1,12 +1,13 @@
 fragment postWithUserInfo on Post {
-  id
-  title
-  text
-  createdAt
-  updatedAt
-  textSnippet
-  userID
-  user {
-    username
-  }
+    id
+    title
+    text
+    createdAt
+    updatedAt
+    textSnippet
+    userID
+    user {
+        id
+        username
+    }
 }

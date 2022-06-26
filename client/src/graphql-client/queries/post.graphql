@@ -3,5 +3,6 @@ query OnePost($id: ID!) {
     id
     title
     text
+    userID
   }
 }
