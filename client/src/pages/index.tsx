@@ -15,6 +15,7 @@ import { PostsDocument, usePostsQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { POST_LIMIT } from "../constants";
 import { NetworkStatus } from "@apollo/client";
+import { GetStaticProps } from "next";
 
 const limit = POST_LIMIT;
 
@@ -77,7 +78,7 @@ const Index = () => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo();
 
   await apolloClient.query({
