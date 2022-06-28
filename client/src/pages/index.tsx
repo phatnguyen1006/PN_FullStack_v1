@@ -67,10 +67,10 @@ const Index = () => {
                                             {post.textSnippet}...
                                         </Text>
                                         <Box ml={"auto"}>
-                                            {meData?.me?.id ===
-                                                post.user.id && (
-                                                <PostActionButton postID={post.id} />
-                                            )}
+                                            <PostActionButton
+                                                postID={post.id}
+                                                postUserID={post.user.id}
+                                            />
                                         </Box>
                                     </Flex>
                                 </Box>

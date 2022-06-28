@@ -1,5 +1,10 @@
 import NextLink from "next/link";
-import { useMeQuery, useOnePostQuery } from "../../../generated/graphql";
+import {
+    IUpdatePostInput,
+    useMeQuery,
+    useOnePostQuery,
+    useUpdatePostMutation,
+} from "../../../generated/graphql";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import {
@@ -16,19 +21,15 @@ import InputField from "../../../components/InputField";
 
 const PostEdit = () => {
     const router = useRouter();
+    const postID = router.query.id as string;
 
     const { data: meData, loading: meLoading } = useMeQuery();
 
     const { data: postData, loading: postLoading } = useOnePostQuery({
-        variables: { id: router.query.id as string },
+        variables: { id: postID },
     });
 
-    const initialValues = {
-        title: postData?.onePost?.title,
-        text: postData?.onePost?.text,
-    };
-
-    const onUpdatedSubmit = () => {};
+    const [updatePost, _] = useUpdatePostMutation();
 
     if (meLoading || postLoading)
         return (
@@ -36,6 +37,21 @@ const PostEdit = () => {
                 <Flex justifyContent="center" alignItems="center" minH="100vh">
                     <Spinner />
                 </Flex>
+            </Layout>
+        );
+
+    if (!postData?.onePost)
+        return (
+            <Layout>
+                <Alert status="error">
+                    <AlertIcon />
+                    <AlertTitle>Post not found</AlertTitle>
+                </Alert>
+                <Box mt={4}>
+                    <NextLink href="/">
+                        <Button>Back to Home page</Button>
+                    </NextLink>
+                </Box>
             </Layout>
         );
 
@@ -58,6 +74,24 @@ const PostEdit = () => {
             </Layout>
         );
 
+    const initialValues = {
+        title: postData.onePost.title,
+        text: postData.onePost.text,
+    };
+
+    const onUpdatedSubmit = async (values: Omit<IUpdatePostInput, "id">) => {
+        await updatePost({
+            variables: {
+                updatePostInput: {
+                    id: postID,
+                    ...values,
+                },
+            },
+        });
+
+        router.back();
+    };
+
     return (
         <Layout>
             <Formik initialValues={initialValues} onSubmit={onUpdatedSubmit}>
@@ -79,11 +113,14 @@ const PostEdit = () => {
                             />
                         </Box>
 
-                        <Flex>
+                        <Flex
+                            justifyContent="space-between"
+                            alignItems="center"
+                            mt={4}
+                        >
                             <Button
                                 type="submit"
                                 colorScheme="teal"
-                                mt={4}
                                 isLoading={isSubmitting}
                             >
                                 Update Post

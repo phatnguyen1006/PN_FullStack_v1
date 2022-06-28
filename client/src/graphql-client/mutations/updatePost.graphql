@@ -1,0 +1,5 @@
+mutation UpdatePost($updatePostInput: IUpdatePostInput!) {
+    updatePost(updatePostInput: $updatePostInput) {
+        ...postMutationResponse
+    }
+}
