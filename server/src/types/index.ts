@@ -15,3 +15,6 @@ export * from "./CreatePostInput";
 export * from "./UpdatePostInput";
 export * from "./ForgotPasswordInput";
 export * from "./ChangePasswordInput";
+
+/** @enum */
+export * from "./VoteType";

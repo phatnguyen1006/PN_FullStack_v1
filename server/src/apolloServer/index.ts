@@ -7,28 +7,30 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 
 // Resolvers
 import { HelloResolver, PostResolver, UserResolver } from "../resolvers";
+import { Context } from "../types";
+import { Connection } from "typeorm";
 
-export const apolloServerConfiguration = async (app: Application) => {
-  const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, PostResolver],
-      validate: false,
-    }), // register resolvers
-    context: ({ req, res }) => ({ req, res }),
-    // playground for test query, or use the original website
-    plugins: [
-      ApolloServerPluginLandingPageGraphQLPlayground({
-        settings: {
-          "request.credentials": "include",
-          "editor.reuseHeaders": false,
-        },
-      }),
-    ],
-  });
+export const apolloServerConfiguration = async (app: Application, connection: Connection) => {
+    const apolloServer = new ApolloServer({
+        schema: await buildSchema({
+            resolvers: [HelloResolver, UserResolver, PostResolver],
+            validate: false,
+        }), // register resolvers
+        context: ({ req, res }): Context => ({ req, res, connection }),
+        // playground for test query, or use the original website
+        plugins: [
+            ApolloServerPluginLandingPageGraphQLPlayground({
+                settings: {
+                    "request.credentials": "include",
+                    "editor.reuseHeaders": false,
+                },
+            }),
+        ],
+    });
 
-  await apolloServer.start(); // start server before do something
+    await apolloServer.start(); // start server before do something
 
-  apolloServer.applyMiddleware({ app, cors: false }); // apply GraphQL/Apollo to stand before server
+    apolloServer.applyMiddleware({ app, cors: false }); // apply GraphQL/Apollo to stand before server
 
-  return apolloServer;
+    return apolloServer;
 };

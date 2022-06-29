@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./Post";
+import { Upvote } from "./Upvote";
 
 //- Decorator
 @ObjectType() // define type when return
@@ -40,4 +41,8 @@ export class User extends BaseEntity {
   // FOREIGN KEYS
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(_to => Upvote, upvote => upvote.user)
+  upvotes: Upvote[]
+
 }

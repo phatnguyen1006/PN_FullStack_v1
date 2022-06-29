@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 // Providers
-import { User, Post } from "../entities";
+import { User, Post, Upvote } from "../entities";
 // constants
 import {
   DB_NAME,
@@ -12,7 +12,7 @@ import {
 } from "../constants";
 
 export const dbORM = async () => {
-  await createConnection({
+  return await createConnection({
     type: "postgres",
     database: DB_NAME,
     username: DB_USERNAME_DEV,
@@ -21,6 +21,6 @@ export const dbORM = async () => {
     port: DB_PORT,
     logging: true,
     synchronize: true,
-    entities: [User, Post],
+    entities: [User, Post, Upvote],
   });
 };

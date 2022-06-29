@@ -12,7 +12,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
 const main = async () => {
-  await dbORM();
+  const connection = await dbORM(); // ORM Connection
   await dbMongo.connectDB();
 
   const app = express();
@@ -37,7 +37,7 @@ const main = async () => {
     resave: false
   }));
 
-  const apolloServer = await apolloServerConfiguration(app);
+  const apolloServer = await apolloServerConfiguration(app, connection);
 
   app.listen(PORT, () =>
     console.log(
