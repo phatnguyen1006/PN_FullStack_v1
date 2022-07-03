@@ -11,17 +11,16 @@ import {
 import NextLink from "next/link";
 import Layout from "../components/Layout";
 import PostActionButton from "../components/PostActionButton";
-import { PostsDocument, useMeQuery, usePostsQuery } from "../generated/graphql";
+import { PostsDocument, usePostsQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { POST_LIMIT } from "../constants";
 import { NetworkStatus } from "@apollo/client";
 import { GetStaticProps } from "next";
+import UpvoteSection from "../components/UpvoteSection";
 
 const limit = POST_LIMIT;
 
 const Index = () => {
-    const { data: meData } = useMeQuery();
-
     const { data, loading, fetchMore, networkStatus } = usePostsQuery({
         variables: { limit },
         // rerender when network status is changed
@@ -53,6 +52,7 @@ const Index = () => {
                                 shadow="md"
                                 borderWidth="1px"
                             >
+                                <UpvoteSection post={post} />
                                 <Box flex={1}>
                                     <NextLink href={`/post/${post.id}`}>
                                         <Link>
