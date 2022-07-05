@@ -15,7 +15,7 @@ import { PostsDocument, usePostsQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { POST_LIMIT } from "../constants";
 import { NetworkStatus } from "@apollo/client";
-import { GetStaticProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from "next";
 import UpvoteSection from "../components/UpvoteSection";
 
 const limit = POST_LIMIT;
@@ -96,8 +96,8 @@ const Index = () => {
     );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-    const apolloClient = initializeApollo();
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+    const apolloClient = initializeApollo({headers: context.req.headers});
 
     await apolloClient.query({
         query: PostsDocument,

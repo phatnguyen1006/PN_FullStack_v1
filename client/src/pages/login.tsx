@@ -13,6 +13,7 @@ import {
 } from "../generated/graphql";
 import { inputFieldError } from "../helpers/errors/inputFieldError";
 import { useCheckAuth } from "../utils/hooks/useCheckAuth";
+import { initializeApollo } from "../lib/apolloClient";
 
 const Login = () => {
   const toast = useToast();
@@ -64,6 +65,10 @@ const Login = () => {
         position: "bottom-right",
         isClosable: true,
       });
+
+      const apolloClient = initializeApollo();
+      apolloClient.resetStore();
+
       router.push("/");
     }
   };
