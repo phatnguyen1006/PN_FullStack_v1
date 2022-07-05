@@ -11,11 +11,17 @@ interface IProps {
     post: PostWithUserInfoFragment;
 }
 
+enum VoteTypeValues {
+    Upvote = 1,
+    Downvote = -1,
+}
+
+type LoadingVote = "upvote-loading" | "downvote-loading" | "not-loading";
+
 const UpvoteSection = ({ post }: IProps) => {
     const [vote, { loading }] = useVoteMutation();
-    const [loadingState, setLoadingState] = useState<
-        "upvote-loading" | "downvote-loading" | "not-loading"
-    >("not-loading");
+    const [loadingState, setLoadingState] =
+        useState<LoadingVote>("not-loading");
 
     const upvote = async (postID: string) => {
         setLoadingState("upvote-loading");
@@ -44,15 +50,33 @@ const UpvoteSection = ({ post }: IProps) => {
             <IconButton
                 icon={<ChevronUpIcon />}
                 aria-label={"upvote"}
-                onClick={upvote.bind(this, post.id)}
+                onClick={
+                    post.voteType === VoteTypeValues.Upvote
+                        ? undefined
+                        : upvote.bind(this, post.id)
+                }
                 isLoading={loading && loadingState === "upvote-loading"}
+                colorScheme={
+                    post.voteType === VoteTypeValues.Upvote
+                        ? "green"
+                        : undefined
+                }
             />
             {post.points}
             <IconButton
                 icon={<ChevronDownIcon />}
                 aria-label={"downvote"}
-                onClick={downvote.bind(this, post.id)}
+                onClick={
+                    post.voteType === VoteTypeValues.Downvote
+                        ? undefined
+                        : downvote.bind(this, post.id)
+                }
                 isLoading={loading && loadingState === "downvote-loading"}
+                colorScheme={
+                    post.voteType === VoteTypeValues.Downvote
+                        ? "red"
+                        : undefined
+                }
             />
         </Flex>
     );

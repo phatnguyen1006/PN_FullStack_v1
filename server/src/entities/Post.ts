@@ -36,6 +36,9 @@ export class Post extends BaseEntity {
     points!: number;
 
     @Field()
+    voteType!: number;
+
+    @Field()
     @CreateDateColumn({ type: "timestamptz" }) // timestampt with zone
     createdAt: Date;
 

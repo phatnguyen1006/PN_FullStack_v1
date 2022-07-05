@@ -40,6 +40,18 @@ export class PostResolver {
         return await User.findOne(root.userID);
     }
 
+    @FieldResolver((_return) => Int)
+    async voteType(@Root() root: Post, @Ctx() { req }: Context) {
+
+        if (!req.session.userID) return 0;
+        const existingVote = await Upvote.findOne({
+            postID: root.id,
+            userID: req.session.userID,
+        });
+
+        return existingVote ? existingVote.value : 0;
+    }
+
     @Query((_return) => PaginatedPosts, { nullable: true })
     async posts(
         @Arg("limit", (_type) => Int) limit: number,
