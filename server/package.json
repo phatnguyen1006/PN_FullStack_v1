@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "dev-server": "nodemon dist/index.js",
+    "dev:server": "nodemon dist/index.js",
     "start-ts": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
     "watch": "tsc -w"
