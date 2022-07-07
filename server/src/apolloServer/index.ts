@@ -9,14 +9,23 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { HelloResolver, PostResolver, UserResolver } from "../resolvers";
 import { Context } from "../types";
 import { Connection } from "typeorm";
+import { buildDataLoaders } from "../utils/dataLoader";
 
-export const apolloServerConfiguration = async (app: Application, connection: Connection) => {
+export const apolloServerConfiguration = async (
+    app: Application,
+    connection: Connection
+) => {
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers: [HelloResolver, UserResolver, PostResolver],
             validate: false,
         }), // register resolvers
-        context: ({ req, res }): Context => ({ req, res, connection }),
+        context: ({ req, res }): Context => ({
+            req,
+            res,
+            connection,
+            dataLoaders: buildDataLoaders(),
+        }),
         // playground for test query, or use the original website
         plugins: [
             ApolloServerPluginLandingPageGraphQLPlayground({

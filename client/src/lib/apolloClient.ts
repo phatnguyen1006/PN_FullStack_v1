@@ -60,7 +60,7 @@ function createApolloClient(headers: initializeApolloType["headers"]) {
 
     return new ApolloClient({
         ssrMode: typeof window === "undefined",
-        link: from([httpLink, errorLink]),
+        link: from([errorLink, httpLink]),
         cache: new InMemoryCache({
             typePolicies: {
                 Query: {
