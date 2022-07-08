@@ -1,5 +1,0 @@
-HOST: heroku
-
-App Name:
-
-Database_URL: postgres://lzpijbcesfkrnh:328a852be799cdfb07b0fbb88d5158f6ce8ae887e82e8a7d12bc7f25758d16bf@ec2-34-233-115-14.compute-1.amazonaws.com:5432/df6qtj2esggtbl
