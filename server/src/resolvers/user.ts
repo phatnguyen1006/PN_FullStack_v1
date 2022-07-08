@@ -20,7 +20,7 @@ import {
 import { validateRegisterInput } from "../utils/validations";
 // helper function
 import { hashPassword, comparePassword } from "../helpers/crypt";
-import { CLIENT_URL, COOKIE_NAME } from "../constants";
+import { CORS_ORIGIN_DEV, COOKIE_NAME } from "../constants";
 import { sendEmail } from "../utils/nodemail";
 import { TokenModel } from "../models/token";
 import { v4 as uuidv4 } from "uuid";
@@ -198,7 +198,7 @@ export class UserResolver {
 
     await sendEmail(
       forgotPasswordInput.email,
-      `<a href="${CLIENT_URL}/change-password?token=${resetToken}&userID=${user.id}">Click here to reset your password</a>`
+      `<a href="${CORS_ORIGIN_DEV}/change-password?token=${resetToken}&userID=${user.id}">Click here to reset your password</a>`
     );
 
     return true;

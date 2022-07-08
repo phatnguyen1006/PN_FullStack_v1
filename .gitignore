@@ -1,4 +1,5 @@
 node_modules
 server/dist
 server/node_modules
+server/ormconfig.json
 server/.env

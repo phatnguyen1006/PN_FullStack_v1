@@ -16,4 +16,12 @@ export const DB_USERNAME_DEV = process.env.DB_USERNAME_DEV;
 export const DB_PASSWORD_DEV = process.env.DB_PASSWORD_DEV;
 
 // Client
-export const CLIENT_URL = process.env.CLIENT_URL;
+export const CORS_ORIGIN_DEV = process.env.CORS_ORIGIN_DEV;
+
+// Domain
+export const domain = __prod__ ? process.env.CLIENT_DOMAIN : undefined;
+
+// COR
+export const CORS_ORIGIN = __prod__
+    ? process.env.CORS_ORIGIN_PROD
+    : process.env.CORS_ORIGIN_DEV;
