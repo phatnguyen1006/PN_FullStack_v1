@@ -22,7 +22,7 @@ import { validateRegisterInput } from "../utils/validations";
 import { hashPassword, comparePassword } from "../helpers/crypt";
 import { CORS_ORIGIN_DEV, COOKIE_NAME } from "../constants";
 import { sendEmail } from "../utils/nodemail";
-import { TokenModel } from "../models/token";
+import { TokenModel } from "../models/Token";
 import { v4 as uuidv4 } from "uuid";
 import { IChangePasswordInput } from "../types";
 

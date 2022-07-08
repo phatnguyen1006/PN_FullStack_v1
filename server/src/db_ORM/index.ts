@@ -30,7 +30,7 @@ export const dbORM = async () => {
             ? {
                   extra: {
                       ssl: {
-                          rejectUnaithorized: false,
+                          rejectUnauthorized: false,
                       },
                   },
                   ssl: true,
