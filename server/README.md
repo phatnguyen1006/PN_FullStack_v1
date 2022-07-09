@@ -18,15 +18,16 @@ https://stackoverflow.com/questions/66982720/keep-running-into-the-same-deployme
 ## Failed to push image to web
 Apple M1 does not support the forcing of different platforms.
 
-
-# replace signingv2 with your own tag
+```bash
+### replace signingv2 with your own tag
 docker buildx build --platform linux/amd64 -t signingv2 .
 
-# make sure to use the name of your Heroku app
+### make sure to use the name of your Heroku app
 docker tag signingv2 registry.heroku.com/signingv2/web
 
-# use docker push to push it to the Heroku registry
+### use docker push to push it to the Heroku registry
 docker push registry.heroku.com/signingv2/web
 
-# then use heroku release to activate
+### then use heroku release to activate
 heroku container:release web -a signingv2
+```
