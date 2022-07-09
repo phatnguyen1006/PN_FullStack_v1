@@ -15,7 +15,7 @@ const main = async () => {
     const connection = await dbORM(); // ORM Connection
     await dbMongo.connectDB();
 
-    if (!__prod__) await connection.runMigrations();
+    if (__prod__) await connection.runMigrations();
 
     const app = express();
 

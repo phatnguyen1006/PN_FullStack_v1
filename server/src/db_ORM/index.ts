@@ -38,6 +38,6 @@ export const dbORM = async () => {
             : {}),
         ...(__prod__ ? {} : { synchronize: true }),
         entities: [User, Post, Upvote],
-        migrations: [path.join(__dirname, "/migrations/*")],
+        migrations: [path.join(__dirname, "../migrations/*")],
     });
 };

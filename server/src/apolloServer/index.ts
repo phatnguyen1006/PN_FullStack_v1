@@ -10,6 +10,7 @@ import { HelloResolver, PostResolver, UserResolver } from "../resolvers";
 import { Context } from "../types";
 import { Connection } from "typeorm";
 import { buildDataLoaders } from "../utils/dataLoader";
+import { __prod__ } from "../constants";
 
 export const apolloServerConfiguration = async (
     app: Application,
@@ -35,6 +36,7 @@ export const apolloServerConfiguration = async (
                 },
             }),
         ],
+        introspection: !__prod__,
     });
 
     await apolloServer.start(); // start server before do something
