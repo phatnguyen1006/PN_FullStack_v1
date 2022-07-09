@@ -14,6 +14,7 @@ import { IncomingHttpHeaders } from "http2";
 import fetch from "isomorphic-unfetch";
 import { onError } from "@apollo/client/link/error";
 import Router from "next/router";
+import { SERVER_URI } from "../constants";
 
 export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
@@ -53,7 +54,7 @@ function createApolloClient(headers: initializeApolloType["headers"]) {
     };
 
     const httpLink = new HttpLink({
-        uri: "http://localhost:4000/graphql", // Server URL (must be absolute)
+        uri: SERVER_URI, // Server URL (must be absolute)
         credentials: "include", // Additional fetch() options like `credentials` or `headers`
         fetch: enhancedFetch,
     });

@@ -23,7 +23,7 @@ const Login = () => {
 
   const initialValues: ILoginInput = { usernameOrEmail: "", password: "" };
 
-  const [loginUser, { loading: _loginUserLoading, data, error }] =
+  const [loginUser, { loading: _loginUserLoading, error }] =
     useLoginMutation();
 
   const checkAuth = () => {
