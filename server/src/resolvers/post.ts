@@ -218,6 +218,9 @@ export class PostResolver {
                 };
             }
 
+            // Remove FK to avoid FK error
+            await Upvote.delete({ postID: id });
+
             await Post.delete({ id });
 
             return {
