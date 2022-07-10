@@ -61,7 +61,7 @@ const PostActionButton = ({ postID, postUserID }: IProps) => {
         if (router.route !== "/") router.push("/");
     };
 
-    if (meData?.me?.id !== postUserID) return null;
+    if (meData?.me?.id !== postUserID) return <></>;
 
     return (
         <Box>

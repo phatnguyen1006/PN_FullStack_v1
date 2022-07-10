@@ -46,6 +46,8 @@ const CreatePost = () => {
 
                 return newPostAfterCreation;
               }
+
+              return existing;
             },
           },
         });

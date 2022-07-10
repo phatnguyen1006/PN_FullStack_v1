@@ -24,7 +24,8 @@ const NavBar = () => {
                     cache.modify({
                         fields: {
                             posts(existing) {
-                                existing.paginatedPosts.forEach((post: Reference) => {
+                                existing.paginatedPosts.forEach(
+                                    (post: Reference) => {
                                         cache.writeFragment({
                                             id: post.__ref, // `Post:17`
                                             fragment: gql`
@@ -36,7 +37,8 @@ const NavBar = () => {
                                                 voteType: 0,
                                             },
                                         });
-                                    });
+                                    }
+                                );
 
                                 return existing;
                             },
@@ -47,55 +49,49 @@ const NavBar = () => {
         });
     };
 
-    const TrailingBarButton = (): JSX.Element => {
-        let body = <></>;
+    let body;
 
-        if (useMeQueryLoading) {
-            body = <></>;
-        } else if (!data?.me) {
-            body = (
-                <>
-                    <NextLink href="/login">
-                        <Link mr={2}>Login</Link>
-                    </NextLink>
-                    <NextLink href="/register">
-                        <Link>Register</Link>
-                    </NextLink>
-                </>
-            );
-        } else {
-            body = (
-                <Flex>
-                    <NextLink href="/create-post">
-                        <Button mr={4}>Create Post</Button>
-                    </NextLink>
-                    <Button
-                        onClick={logoutUser}
-                        isLoading={useLogoutMutationLoading}
-                    >
-                        Logout
-                    </Button>
-                </Flex>
-            );
-        }
-
-        return body;
-    };
+    if (useMeQueryLoading) {
+        body = null;
+    } else if (!data?.me) {
+        body = (
+            <>
+                <NextLink href="/login">
+                    <Link mr={2}>Login</Link>
+                </NextLink>
+                <NextLink href="/register">
+                    <Link>Register</Link>
+                </NextLink>
+            </>
+        );
+    } else {
+        body = (
+            <Flex>
+                <NextLink href="/create-post">
+                    <Button mr={4}>Create Post</Button>
+                </NextLink>
+                <Button
+                    onClick={logoutUser}
+                    isLoading={useLogoutMutationLoading}
+                >
+                    Logout
+                </Button>
+            </Flex>
+        );
+    }
 
     return (
         <Box bg="tan" p={4}>
             <Flex
                 maxW={800}
-                m="auto"
                 justifyContent="space-between"
                 align="center"
+                m="auto"
             >
                 <NextLink href="/">
                     <Heading>Reddit</Heading>
                 </NextLink>
-                <Box>
-                    <TrailingBarButton />
-                </Box>
+                <Box>{body}</Box>
             </Flex>
         </Box>
     );

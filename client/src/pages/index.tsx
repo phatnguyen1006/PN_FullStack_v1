@@ -15,7 +15,7 @@ import { PostsDocument, usePostsQuery } from "../generated/graphql";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 import { POST_LIMIT } from "../constants";
 import { NetworkStatus } from "@apollo/client";
-import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import UpvoteSection from "../components/UpvoteSection";
 
 const limit = POST_LIMIT;

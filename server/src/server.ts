@@ -6,7 +6,7 @@ import dbMongo from "./db_mongo";
 import { apolloServerConfiguration } from "./apolloServer";
 import session from "express-session";
 // constants
-import { COOKIE_NAME, CORS_ORIGIN, domain, SESSION_SECRET, __prod__ } from "./constants";
+import { COOKIE_NAME, CORS_ORIGIN, SESSION_SECRET, __prod__ } from "./constants";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
@@ -26,6 +26,8 @@ const main = async () => {
         })
     );
 
+    app.set("trust proxy", 1);
+
     // session/cookies
     app.use(
         session({
@@ -35,8 +37,7 @@ const main = async () => {
                 maxAge: 100 * 60 * 60, // 1h
                 httpOnly: true, // JS front end cannot access to cookie
                 secure: __prod__, // cookie only work in https
-                sameSite: "lax", // protection against CSRF
-                domain: domain,
+                sameSite: "none", // protection against CSRF
             },
             secret: SESSION_SECRET,
             saveUninitialized: false, // dont save empty session, right from the start

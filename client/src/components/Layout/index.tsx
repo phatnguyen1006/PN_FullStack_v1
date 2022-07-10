@@ -6,7 +6,7 @@ interface ILayoutProps {
   children?: ReactNode;
 }
 
-const Layout: React.FC = ({ children }: ILayoutProps) => {
+const Layout = ({ children }: ILayoutProps) => {
   return (
     <>
       <NavBar />

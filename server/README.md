@@ -20,14 +20,14 @@ Apple M1 does not support the forcing of different platforms.
 
 ```bash
 ### replace signingv2 with your own tag
-docker buildx build --platform linux/amd64 -t signingv2 .
+docker buildx build --platform linux/amd64 -t reddit-registry .
 
 ### make sure to use the name of your Heroku app
-docker tag signingv2 registry.heroku.com/signingv2/web
+docker tag reddit-registry registry.heroku.com/reddit-registry/web
 
 ### use docker push to push it to the Heroku registry
-docker push registry.heroku.com/signingv2/web
+docker push registry.heroku.com/reddit-registry/web
 
 ### then use heroku release to activate
-heroku container:release web -a signingv2
+heroku container:release web -a reddit-registry
 ```
