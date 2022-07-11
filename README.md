@@ -5,4 +5,4 @@ Reddit Web FullStack
 # Packages
 # Services
 # Required
-# Operations
+# Operation
