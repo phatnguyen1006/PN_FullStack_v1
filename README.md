@@ -6,3 +6,9 @@ Reddit Web FullStack
 # Services
 # Required
 # Operation
+## Server
+```bash
+```
+## Client
+```bash
+```
