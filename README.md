@@ -4,6 +4,8 @@ Reddit Web FullStack
 # Tech
 # Packages
 # Services
+- nodemailer
+
 # Required
 # Operation
 ## Server
